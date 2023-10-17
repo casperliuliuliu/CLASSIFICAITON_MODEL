@@ -11,11 +11,11 @@ def get_data_transforms():
             transforms.ToTensor(),
         ]),
         'val': transforms.Compose([
-            transforms.Resize(200),
+            transforms.Resize(224),
             transforms.ToTensor(),
         ]),
         'test': transforms.Compose([
-            transforms.Resize(100),
+            transforms.Resize(224),
             transforms.ToTensor(),
         ]),
     }
