@@ -3,7 +3,8 @@ from email.mime.text import MIMEText
 import smtplib
 from datetime import datetime
 import sys
-sys.path.append('D:/P2023/file/')
+# sys.path.append('D:/P2023/file/')
+sys.path.append('E:\casper\OTHER')
 from config import get_config 
 filename = ""
 def pprint(output = '\n', show_time = False): # print and fprint at the same time

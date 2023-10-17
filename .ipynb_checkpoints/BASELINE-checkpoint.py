@@ -91,7 +91,7 @@ def train_model(model, model_things):
     
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=learning_rate)
-    step_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)
+    step_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=50, gamma=0.1)
     class_counts = get_class_counts(data_dir)
     data_transforms = get_data_transforms()
     dataloaders = get_dataloaders(data_dir, data_transforms, train_ratio, val_ratio, batch_size)

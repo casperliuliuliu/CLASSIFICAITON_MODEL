@@ -9,7 +9,7 @@ def get_model_structure(model_name, pretrain=None):
         return models.resnet101(weights=pretrain)
     elif model_name == 'resnet152':
         return models.resnet152(weights=pretrain)
-    return model
+    return None
     
 def get_model(model_name, pretrain, class_counts, pretrain_category):
     if isinstance(pretrain, str): # using my own pretrained weight.
