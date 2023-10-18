@@ -46,7 +46,7 @@ def get_data_transforms(op):
     for ii in range(1,4):
         data_transforms[f'aug{ii-1}'] = transforms.Compose([
             transforms.Resize(256),
-            transforms.CenterCrop(224),
+            transforms.RandomCrop(224),
             transforms.RandomHorizontalFlip(ii//2),
             transforms.RandomVerticalFlip(ii%2),
             transforms.ToTensor(),

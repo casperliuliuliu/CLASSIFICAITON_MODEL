@@ -11,7 +11,7 @@ model_things = {
     'train_ratio' : 0.6,
     'val_ratio' : 0.5,
     'random_seed' : 42,
-    'batch_size' : 10,
+    'batch_size' : 100,
     'log_path' : f"{path}{name}.txt",
     'weight_store_path' : f"{path}/WEIGHT/{name}(1).pt",
     'learning_rate' : 0.01,
