@@ -33,6 +33,7 @@ for ii in [16, 40, 100, 400]:
         weight_store_path = model_things['weight_store_path']
         torch.save(model.state_dict(), weight_store_path)
     except Exception as e:
+        print(str(e))
         mes = f"""Hi Casper,
         
 Training is failed! Please have a look. 
@@ -42,7 +43,7 @@ Hope you well,
 RTX3090 Founder Edition
             """
         sub = f"{name} WENT WRONG!" ##
-        Notification(sub, mes)
+        # Notification(sub, mes)
     
 # # model 2
 # name = "ResNet152_1016_BASE"

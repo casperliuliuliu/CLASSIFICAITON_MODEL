@@ -122,6 +122,7 @@ def train_model(model, model_things):
                     outputs = model(inputs)
                     _, preds = torch.max(outputs, 1)
                     loss = criterion(outputs, labels)
+                    print(loss)
                     if phase == 'train': # backward + optimize only if in training phase
                         optimizer.zero_grad()
                         loss.backward()
