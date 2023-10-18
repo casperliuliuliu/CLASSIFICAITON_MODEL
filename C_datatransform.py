@@ -1,7 +1,8 @@
 import numpy as np
 from torchvision import transforms
 
-def get_data_transforms(op = 0):
+def get_data_transforms(op):
+    op = 0
     mean = np.array([0.5, 0.5, 0.5])
     std = np.array([0.25, 0.25, 0.25])
     data_transforms = {
@@ -18,7 +19,10 @@ def get_data_transforms(op = 0):
             transforms.ToTensor(),
         ]),
     }
-    if op == 1:
+    if op == 0:
+        return data_transforms
+
+    elif op == 1:
         temp = [
             transforms.Resize(224),
             transforms.Normalize(mean, std),
