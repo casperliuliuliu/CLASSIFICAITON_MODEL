@@ -2,7 +2,6 @@ import numpy as np
 from torchvision import transforms
 
 def get_data_transforms(op):
-    op = 0
     mean = np.array([0.5, 0.5, 0.5])
     std = np.array([0.25, 0.25, 0.25])
     data_transforms = {
@@ -53,4 +52,5 @@ def get_data_transforms(op):
             transforms.Normalize(mean, std),
             transforms.ToTensor(),
         ])
+    print(data_transforms.keys())
     return data_transforms

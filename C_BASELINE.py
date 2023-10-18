@@ -22,7 +22,7 @@ from C_datatransform import get_data_transforms
 from C_other_func import write_log, send_email
 filename = ""
     
-def get_dataloaders(data_dir, data_transforms, train_ratio, val_ratio, batch_size, aug):
+def get_dataloaders(data_dir, data_transforms, train_ratio, val_ratio, batch_size):
     # Create a single merged dataset
     train_dataset = datasets.ImageFolder(data_dir, transform = data_transforms['train'])
     val_dataset = datasets.ImageFolder(data_dir, transform = data_transforms['val'])
@@ -39,6 +39,7 @@ def get_dataloaders(data_dir, data_transforms, train_ratio, val_ratio, batch_siz
     split_val = split_train + int(np.floor(val_ratio * (num_train-split_train)))
     train_idx, val_idx, test_idx = indices[0:split_train], indices[split_train:split_val], indices[split_val:]
     merge_dataset = Subset(train_dataset, train_idx)
+    print(data_transforms.keys())
     for ii in range(len(data_transforms.keys())-3):
         print(ii)
         aug_dataset = datasets.ImageFolder(data_dir, transform = data_transforms[f'aug{ii}'])
@@ -103,7 +104,7 @@ def train_model(model, model_things):
     step_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=50, gamma=0.1)
     class_counts = get_class_counts(data_dir)
     data_transforms = get_data_transforms(data_transforms_op)
-    dataloaders = get_dataloaders(data_dir, data_transforms, train_ratio, val_ratio, batch_size, True)
+    dataloaders = get_dataloaders(data_dir, data_transforms, train_ratio, val_ratio, batch_size)
     dataset_sizes = get_dataset_sizes(dataloaders)
     log_message = write_log(model_things,class_counts)
     

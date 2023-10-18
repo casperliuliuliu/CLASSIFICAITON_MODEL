@@ -21,7 +21,7 @@ model_things = {
     'pretrain_category' : 2,
     'model_name' : 'vit_large',
     'other_info' : "To test base case vit_large",
-    'data_transforms_op' : 0,
+    'data_transforms_op' : 1,
 }
 try:
     model = train_mod(model_things)
@@ -38,4 +38,4 @@ Hope you well,
 RTX3090 Founder Edition
         """
     sub = f"{name} WENT WRONG!" ##
-    Notification(sub, mes)
+    # Notification(sub, mes)
