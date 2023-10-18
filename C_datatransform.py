@@ -18,10 +18,6 @@ def get_data_transforms(op):
             transforms.Resize(224),
             transforms.ToTensor(),
         ]),
-        'aug': transforms.Compose([
-            transforms.Resize(224),
-            transforms.ToTensor(),
-        ]),
     }
     if op == 0:
         return data_transforms
@@ -48,12 +44,13 @@ def get_data_transforms(op):
             'val': transforms.Compose(temp),
             'test': transforms.Compose(temp),
         }
-            #     'train': transforms.Compose([
-            #     transforms.Resize(256),
-            #     transforms.CenterCrop(224),
-            #     transforms.RandomHorizontalFlip(),
-            #     transforms.RandomVerticalFlip(),
-            #     transforms.Normalize(mean, std),
-            #     transforms.ToTensor(),
-            # ]),
+    for ii in range(1,4):
+        data_transforms[f'aug{ii-1}'] = transforms.Compose([
+            transforms.Resize(256),
+            transforms.CenterCrop(224),
+            transforms.RandomHorizontalFlip(ii//2),
+            transforms.RandomVerticalFlip(ii%2),
+            transforms.Normalize(mean, std),
+            transforms.ToTensor(),
+        ])
     return data_transforms

@@ -27,7 +27,6 @@ def get_dataloaders(data_dir, data_transforms, train_ratio, val_ratio, batch_siz
     train_dataset = datasets.ImageFolder(data_dir, transform = data_transforms['train'])
     val_dataset = datasets.ImageFolder(data_dir, transform = data_transforms['val'])
     test_dataset = datasets.ImageFolder(data_dir, transform = data_transforms['test'])
-    aug_dataset = datasets.ImageFolder(data_dir, transform = data_transforms['aug'])
     # if 'aug0' in data_transforms.keys():
     #     merge_dataset = train_dataset
     # else:
@@ -39,9 +38,13 @@ def get_dataloaders(data_dir, data_transforms, train_ratio, val_ratio, batch_siz
     split_train = int(np.floor(train_ratio * num_train))
     split_val = split_train + int(np.floor(val_ratio * (num_train-split_train)))
     train_idx, val_idx, test_idx = indices[0:split_train], indices[split_train:split_val], indices[split_val:]
-    aug_sub = Subset(aug_dataset, train_idx)
-    train_sub = Subset(train_dataset, train_idx)
-    merge_dataset = ConcatDataset([aug_sub,train_sub])
+    merge_dataset = Subset(train_dataset, train_idx)
+    for ii in range(len(data_transforms.keys())-3):
+        print(ii)
+        aug_dataset = datasets.ImageFolder(data_dir, transform = data_transforms[f'aug{ii}'])
+        aug_sub = Subset(aug_dataset, train_idx)
+        merge_dataset = ConcatDataset([merge_dataset,aug_sub])
+    
     train_loader = DataLoader(merge_dataset, batch_size=batch_size)
     val_loader = DataLoader(Subset(val_dataset, val_idx), batch_size=batch_size)
     test_loader = DataLoader(Subset(test_dataset, test_idx), batch_size=batch_size)
