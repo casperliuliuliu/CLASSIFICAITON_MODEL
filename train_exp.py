@@ -19,8 +19,8 @@ model_things = {
     'lr_method' : "LR_stepping",
     'pretrain' : True,
     'pretrain_category' : 2,
-    'model_name' : 'resnet18',
-    'other_info' : "To test how augmented data affect resnet18",
+    'model_name' : 'vit_large',
+    'other_info' : "To test base case vit_large",
     'data_transforms_op' : 0,
 }
 try:

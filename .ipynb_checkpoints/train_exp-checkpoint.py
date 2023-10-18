@@ -2,8 +2,8 @@ from C_BASELINE import train_mod
 import torch
 from C_other_func import Notification
 # model 1
-name = "Augment_1018"
-path = "D:/REDO/RESNET18/"
+name = "Base_1018"
+path = "D:/REDO/VIT_LARGE/"
 # path = "E:/PROCESS_2023/REDO/RESNET101/"
 model_things = {
     'data_dir' : "D:/P2023/DATA/glomer_cg(2)",
@@ -19,8 +19,8 @@ model_things = {
     'lr_method' : "LR_stepping",
     'pretrain' : True,
     'pretrain_category' : 2,
-    'model_name' : 'resnet18',
-    'other_info' : "To test how augmented data affect resnet18",
+    'model_name' : 'vit_large',
+    'other_info' : "To test base case vit_large",
     'data_transforms_op' : 0,
 }
 try:
