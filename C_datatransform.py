@@ -23,8 +23,8 @@ def get_data_transforms(op):
     elif op == 1:
         temp = [
             transforms.Resize(224),
-            transforms.Normalize(mean, std),
             transforms.ToTensor(),
+            transforms.Normalize(mean, std),
         ]
         data_transforms = {
             'train': transforms.Compose(temp),
@@ -35,8 +35,8 @@ def get_data_transforms(op):
         temp = [
             transforms.Resize(256),
             transforms.CenterCrop(224),
-            transforms.Normalize(mean, std),
             transforms.ToTensor(),
+            transforms.Normalize(mean, std),
         ]
         data_transforms = {
             'train': transforms.Compose(temp),
@@ -49,8 +49,8 @@ def get_data_transforms(op):
             transforms.CenterCrop(224),
             transforms.RandomHorizontalFlip(ii//2),
             transforms.RandomVerticalFlip(ii%2),
-            transforms.Normalize(mean, std),
             transforms.ToTensor(),
+            transforms.Normalize(mean, std),
         ])
-    print(data_transforms.keys())
+    print(data_transforms)
     return data_transforms

@@ -2,7 +2,7 @@ from C_BASELINE import train_mod
 import torch
 from C_other_func import Notification
 # model 1
-name = "Augment_1018"
+name = "Augment_Test_1018"
 # path = "D:/REDO/RESNET18/"
 path = "E:/PROCESS_2023/REDO/RESNET18/"
 model_things = {
@@ -19,8 +19,8 @@ model_things = {
     'lr_method' : "LR_stepping",
     'pretrain' : True,
     'pretrain_category' : 2,
-    'model_name' : 'vit_large',
-    'other_info' : "To test base case vit_large",
+    'model_name' : 'resnet18',
+    'other_info' : "To test how augmentation improve acc",
     'data_transforms_op' : 1,
 }
 try:
