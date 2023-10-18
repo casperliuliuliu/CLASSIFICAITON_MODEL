@@ -18,10 +18,13 @@ def get_data_transforms(op):
             transforms.Resize(224),
             transforms.ToTensor(),
         ]),
+        'aug': transforms.Compose([
+            transforms.Resize(224),
+            transforms.ToTensor(),
+        ]),
     }
     if op == 0:
         return data_transforms
-
     elif op == 1:
         temp = [
             transforms.Resize(224),

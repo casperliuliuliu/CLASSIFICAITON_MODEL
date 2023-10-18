@@ -3,15 +3,15 @@ import torch
 from C_other_func import Notification
 # model 1
 name = "Augment_1018"
-path = "D:/REDO/RESNET18/"
-# path = "E:/PROCESS_2023/REDO/RESNET101/"
+# path = "D:/REDO/RESNET18/"
+path = "E:/PROCESS_2023/REDO/RESNET18/"
 model_things = {
-    'data_dir' : "D:/P2023/DATA/glomer_cg(2)",
-    # 'data_dir' : "E:\Data\iga_mgn",
+    # 'data_dir' : "D:/P2023/DATA/glomer_cg(2)",
+    'data_dir' : "E:\Data\iga_mgn",
     'train_ratio' : 0.6,
     'val_ratio' : 0.5,
     'random_seed' : 42,
-    'batch_size' : 100,
+    'batch_size' : 10,
     'log_path' : f"{path}{name}.txt",
     'weight_store_path' : f"{path}/WEIGHT/{name}(1).pt",
     'learning_rate' : 0.01,

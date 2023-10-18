@@ -22,11 +22,12 @@ from C_datatransform import get_data_transforms
 from C_other_func import write_log, send_email
 filename = ""
     
-def get_dataloaders(data_dir, data_transforms, train_ratio, val_ratio, batch_size):
+def get_dataloaders(data_dir, data_transforms, train_ratio, val_ratio, batch_size, aug):
     # Create a single merged dataset
     train_dataset = datasets.ImageFolder(data_dir, transform = data_transforms['train'])
     val_dataset = datasets.ImageFolder(data_dir, transform = data_transforms['val'])
     test_dataset = datasets.ImageFolder(data_dir, transform = data_transforms['test'])
+    aug_dataset = datasets.ImageFolder(data_dir, transform = data_transforms['aug'])
     # if 'aug0' in data_transforms.keys():
     #     merge_dataset = train_dataset
     # else:
@@ -38,8 +39,10 @@ def get_dataloaders(data_dir, data_transforms, train_ratio, val_ratio, batch_siz
     split_train = int(np.floor(train_ratio * num_train))
     split_val = split_train + int(np.floor(val_ratio * (num_train-split_train)))
     train_idx, val_idx, test_idx = indices[0:split_train], indices[split_train:split_val], indices[split_val:]
-    
-    train_loader = DataLoader(Subset(train_dataset, train_idx), batch_size=batch_size)
+    aug_sub = Subset(aug_dataset, train_idx)
+    train_sub = Subset(train_dataset, train_idx)
+    merge_dataset = ConcatDataset([aug_sub,train_sub])
+    train_loader = DataLoader(merge_dataset, batch_size=batch_size)
     val_loader = DataLoader(Subset(val_dataset, val_idx), batch_size=batch_size)
     test_loader = DataLoader(Subset(test_dataset, test_idx), batch_size=batch_size)
     
@@ -97,7 +100,7 @@ def train_model(model, model_things):
     step_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=50, gamma=0.1)
     class_counts = get_class_counts(data_dir)
     data_transforms = get_data_transforms(data_transforms_op)
-    dataloaders = get_dataloaders(data_dir, data_transforms, train_ratio, val_ratio, batch_size)
+    dataloaders = get_dataloaders(data_dir, data_transforms, train_ratio, val_ratio, batch_size, True)
     dataset_sizes = get_dataset_sizes(dataloaders)
     log_message = write_log(model_things,class_counts)
     
@@ -158,7 +161,7 @@ def train_model(model, model_things):
     log_message +='\n Best val Acc={:.4f}'.format(
                 best_acc)
     
-    send_email(log_message, model_name)
+    # send_email(log_message, model_name)
     
     pprint()
     pprint()
