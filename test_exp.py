@@ -3,15 +3,15 @@ import torch
 from C_other_func import Notification
 # model 1
 name = "test_model_1018"
-# path = "D:/REDO/RESNET18/"
-path = "E:/PROCESS_2023/REDO/MEDVIT_S/"
+path = "D:/REDO/MEDVIT_S/"
+# path = "E:/PROCESS_2023/REDO/MEDVIT_S/"
 model_things = {
-    # 'data_dir' : "D:/P2023/DATA/glomer_cg(2)",
-    'data_dir' : "E:\Data\iga_mgn",
+    'data_dir' : "D:/P2023/DATA/glomer_cg(2)",
+    # 'data_dir' : "E:\Data\iga_mgn",
     'train_ratio' : 0.6,
     'val_ratio' : 0.5,
     'random_seed' : 42,
-    'batch_size' : 2,
+    'batch_size' : 100,
     'log_path' : f"{path}{name}.txt",
     'weight_store_path' : f"{path}/WEIGHT/{name}(1).pt",
     'learning_rate' : 0.01,
@@ -19,8 +19,8 @@ model_things = {
     'lr_method' : "LR_stepping",
     'pretrain' : True,
     'pretrain_category' : 2,
-    'model_name' : 'medvit_small',
-    'other_info' : "To test how augmentation improve acc",
+    'model_name' : 'medvit_large',
+    'other_info' : "To test how augmentation data(4x) improve acc",
     'data_transforms_op' : 1,
 }
 try:

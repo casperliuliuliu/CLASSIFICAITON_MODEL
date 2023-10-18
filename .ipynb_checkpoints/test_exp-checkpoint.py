@@ -1,20 +1,41 @@
-from BASELINE import train_mod
-from torchvision.models import ResNet18_Weights
+from C_BASELINE import train_mod
 import torch
-# setup 1/2
-name = "ResNet18_1016_pyfile"
+from C_other_func import Notification
+# model 1
+name = "test_model_1018"
+path = "D:/REDO/MEDVIT_S/"
+# path = "E:/PROCESS_2023/REDO/MEDVIT_S/"
 model_things = {
     'data_dir' : "D:/P2023/DATA/glomer_cg(2)",
+    # 'data_dir' : "E:\Data\iga_mgn",
     'train_ratio' : 0.6,
     'val_ratio' : 0.5,
     'random_seed' : 42,
-    'batch_size' : 4,
-    'log_path' : f"D:/REDO/RESNET18/{name}.txt",
-    'weight_store_path' : f"D:/REDO/RESNET18/WEIGHT/{name}(1).pt",
+    'batch_size' : 100,
+    'log_path' : f"{path}{name}.txt",
+    'weight_store_path' : f"{path}/WEIGHT/{name}(1).pt",
     'learning_rate' : 0.01,
-    'num_of_epoch' : 1,
+    'num_of_epoch' : 20,
     'lr_method' : "LR_stepping",
-    'pretrain' : ResNet18_Weights.IMAGENET1K_V1,
-    'model_name' : 'resnet18'
+    'pretrain' : True,
+    'pretrain_category' : 2,
+    'model_name' : 'medvit_large',
+    'other_info' : "To test how augmentation data(4x) improve acc",
+    'data_transforms_op' : 1,
 }
-test_mod(model_things)
+try:
+    model = train_mod(model_things)
+    weight_store_path = model_things['weight_store_path']
+    torch.save(model.state_dict(), weight_store_path)
+except Exception as e:
+    print(e)
+    mes = f"""Hi Casper,
+    
+Training is failed! Please have a look.
+[ Error: {str(e)} ]
+
+Hope you well,
+RTX3090 Founder Edition
+        """
+    sub = f"{name} WENT WRONG!" ##
+    # Notification(sub, mes)
