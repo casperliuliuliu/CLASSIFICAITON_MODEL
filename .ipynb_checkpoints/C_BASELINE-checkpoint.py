@@ -27,9 +27,12 @@ def get_dataloaders(data_dir, data_transforms, train_ratio, val_ratio, batch_siz
     train_dataset = datasets.ImageFolder(data_dir, transform = data_transforms['train'])
     val_dataset = datasets.ImageFolder(data_dir, transform = data_transforms['val'])
     test_dataset = datasets.ImageFolder(data_dir, transform = data_transforms['test'])
+    # if 'aug0' in data_transforms.keys():
+    #     merge_dataset = train_dataset
+    # else:
     
     # obtain training indices that will be used for validation
-    num_train = len(train_dataset)
+    num_train = len(test_dataset)
     indices = list(range(num_train))
     random.shuffle(indices)
     split_train = int(np.floor(train_ratio * num_train))
@@ -88,12 +91,12 @@ def train_model(model, model_things):
     val_ratio = model_things['val_ratio']
     batch_size = model_things['batch_size']
     model_name = model_things['model_name']
-    
+    data_transforms_op = model_things['data_transforms_op']
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=learning_rate)
     step_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=50, gamma=0.1)
     class_counts = get_class_counts(data_dir)
-    data_transforms = get_data_transforms()
+    data_transforms = get_data_transforms(data_transforms_op)
     dataloaders = get_dataloaders(data_dir, data_transforms, train_ratio, val_ratio, batch_size)
     dataset_sizes = get_dataset_sizes(dataloaders)
     log_message = write_log(model_things,class_counts)
@@ -122,6 +125,7 @@ def train_model(model, model_things):
                     outputs = model(inputs)
                     _, preds = torch.max(outputs, 1)
                     loss = criterion(outputs, labels)
+                    # print(loss)
                     if phase == 'train': # backward + optimize only if in training phase
                         optimizer.zero_grad()
                         loss.backward()
@@ -173,7 +177,6 @@ def train_mod(model_things):
     
     class_counts = get_class_counts(data_dir)
     model = get_model(model_name, pretrain, class_counts, pretrain_category)
-    
     model = train_model(model, model_things)
 
     return model

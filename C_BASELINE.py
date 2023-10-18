@@ -27,9 +27,12 @@ def get_dataloaders(data_dir, data_transforms, train_ratio, val_ratio, batch_siz
     train_dataset = datasets.ImageFolder(data_dir, transform = data_transforms['train'])
     val_dataset = datasets.ImageFolder(data_dir, transform = data_transforms['val'])
     test_dataset = datasets.ImageFolder(data_dir, transform = data_transforms['test'])
+    # if 'aug0' in data_transforms.keys():
+    #     merge_dataset = train_dataset
+    # else:
     
     # obtain training indices that will be used for validation
-    num_train = len(train_dataset)
+    num_train = len(test_dataset)
     indices = list(range(num_train))
     random.shuffle(indices)
     split_train = int(np.floor(train_ratio * num_train))
