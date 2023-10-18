@@ -52,5 +52,5 @@ def get_data_transforms(op):
             transforms.ToTensor(),
             transforms.Normalize(mean, std),
         ])
-    print(data_transforms)
+    # print(data_transforms)
     return data_transforms
