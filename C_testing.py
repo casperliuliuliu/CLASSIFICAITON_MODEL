@@ -23,6 +23,7 @@ def test_model(model, model_things):
     for inputs, labels in tqdm(dataloaders['test']): # Iterate over data.
         inputs, labels = inputs.cuda(), labels.cuda()
         outputs = model(inputs)
+        print(f"{outputs}")
         _, preds = torch.max(outputs, 1)
         loss = criterion(outputs, labels)
         running_loss += loss.item() * inputs.size(0)
