@@ -6,6 +6,7 @@ from MedViT import MedViT_small
 from MedViT import MedViT_base
 from MedViT import MedViT_large
 resnet_list = ['resnet18', 'resnet101', 'resnet152']
+densenet_list = ['densenet121', 'densenet161', 'densenet169', 'densenet201']
 vit_list = ['vit_small', 'vit_base', 'vit_large']
 medvit_list = ['medvit_small', 'medvit_base', 'medvit_large']
 def get_model_structure(model_name, pretrain=None):
@@ -15,6 +16,8 @@ def get_model_structure(model_name, pretrain=None):
         return models.resnet101(weights=pretrain)
     elif model_name == 'resnet152':
         return models.resnet152(weights=pretrain)
+    elif model_name == 'densenet121':
+        return models.densenet121(weights=pretrain)
     elif model_name == 'vit_large':
         return timm.create_model("vit_large_patch16_224", pretrained=pretrain)
     elif model_name == "medvit_large":
@@ -41,7 +44,11 @@ def get_model(model_name, pretrain, class_counts, pretrain_category):
         if model_name in resnet_list:
             num_ftrs = model.fc.in_features
             model.fc = nn.Linear(num_ftrs, len(class_counts))
-
+            
+        elif model_name in densenet_list:
+            num_ftrs = model.classifier.in_features
+            model.classifier = nn.Linear(num_ftrs, len(class_counts))
+            
         elif model_name in vit_list:
             num_ftrs = model.head.in_features
             model.head = nn.Linear(num_ftrs, len(class_counts))
