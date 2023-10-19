@@ -51,6 +51,8 @@ def write_log(model_things,class_counts):
     batch_size = model_things['batch_size']
     model_name = model_things['model_name']
     other_info = model_things['other_info']
+    dropout_prob = model_things['dropout_prob']
+    data_transforms_op = model_things['data_transforms_op']
     
     log_message = f"""
 Base:
@@ -66,6 +68,8 @@ Train:
     lr method: {lr_method}
     split ratio: {train_ratio}
     val/test ratio: {val_ratio}
+    dropout rate: {dropout_prob}
+    transform Opt: {data_transforms_op}
     
 Other Information:
     {other_info}

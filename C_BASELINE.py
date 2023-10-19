@@ -97,7 +97,7 @@ def train_model(model, model_things):
     train_ratio = model_things['train_ratio']
     val_ratio = model_things['val_ratio']
     batch_size = model_things['batch_size']
-    model_name = model_things['model_name']
+    # model_name = model_things['model_name']
     data_transforms_op = model_things['data_transforms_op']
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=learning_rate)
@@ -165,7 +165,7 @@ def train_model(model, model_things):
     log_message +='\n Best val Acc={:.4f}'.format(
                 best_acc)
     
-    # send_email(log_message, model_name)
+    send_email(log_message, model_name)
     
     pprint()
     pprint()
@@ -178,13 +178,14 @@ def train_mod(model_things):
     model_name = model_things['model_name']
     data_dir = model_things['data_dir']
     pretrain_category = model_things['pretrain_category']
+    dropout_prob = model_things['dropout_prob']
     
     global filename
     filename = log_path
     
     class_counts = get_class_counts(data_dir)
-    model = get_model(model_name, pretrain, class_counts, pretrain_category)
+    model = get_model(model_name, pretrain, class_counts, pretrain_category, dropout_prob)
+    print(model)
     model = train_model(model, model_things)
-
     return model
     
