@@ -70,6 +70,9 @@ def get_dataloaders(data_dir, data_transforms, train_ratio, val_ratio, batch_siz
     
 def get_class_counts(data_dir):
     train_dataset = datasets.ImageFolder(data_dir)
+    for i, class_name in enumerate(train_dataset.classes):
+        pprint(f"Class label {i}: {class_name}")
+        
     class_counts = {}
     for _, label in train_dataset.samples:
         class_name = train_dataset.classes[label]
@@ -175,7 +178,7 @@ def train_model(model, model_things):
     
     send_email(log_message, model_name)
     
-    pprint()
+    pprint("="*20)
     pprint()
     model.load_state_dict(best_model_wts) # load best model weights
     return model
