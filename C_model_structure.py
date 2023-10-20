@@ -11,22 +11,32 @@ densenet_list = ['densenet121', 'densenet161', 'densenet169', 'densenet201']
 vit_list = ['vit_small', 'vit_base', 'vit_large']
 medvit_list = ['medvit_small', 'medvit_base', 'medvit_large']
 def get_model_structure(model_name, pretrain=None):
-    if model_name == 'resnet18' or 'resnet18_mod1':
+    if model_name == 'resnet18' or model_name == 'resnet18_mod1':
         return models.resnet18(weights=pretrain)
-    elif model_name == 'resnet101' or 'resnet101_mod1':
+    elif model_name == 'resnet101' or model_name == 'resnet101_mod1':
         return models.resnet101(weights=pretrain)
-    elif model_name == 'resnet152' or 'resnet152_mod1':
+    elif model_name == 'resnet152' or model_name == 'resnet152_mod1':
         return models.resnet152(weights=pretrain)
+        
     elif model_name == 'densenet121':
         return models.densenet121(weights=pretrain)
+    elif model_name == 'densenet161':
+        return models.densenet161(weights=pretrain)
+    elif model_name == 'densenet169':
+        return models.densenet169(weights=pretrain)
+    elif model_name == 'densenet201':
+        return models.densenet201(weights=pretrain)
+        
     elif model_name == 'vit_large':
         return timm.create_model("vit_large_patch16_224", pretrained=pretrain)
+    
     elif model_name == "medvit_large":
         return MedViT_large(pretrained = pretrain)
     elif model_name == "medvit_base":
         return MedViT_base(pretrained = pretrain)
     elif model_name == "medvit_small":
         return MedViT_small(pretrained = pretrain)
+        
     return None
     
 def get_model(model_name, pretrain, class_counts, pretrain_category, dropout_prob):
@@ -41,6 +51,7 @@ def get_model(model_name, pretrain, class_counts, pretrain_category, dropout_pro
         
     else:
         model = get_model_structure(model_name, pretrain)
+        print(model)
         if model_name in resnet_mod_list:
             print("## YOU ARE USING A MODED MODEL ##")
             num_ftrs = model.fc.in_features
@@ -48,7 +59,7 @@ def get_model(model_name, pretrain, class_counts, pretrain_category, dropout_pro
                 nn.Dropout(p=dropout_prob),
                 nn.Linear(num_ftrs, len(class_counts)),
             )
-        if model_name in resnet_list:
+        elif model_name in resnet_list:
             num_ftrs = model.fc.in_features
             model.fc = nn.Linear(num_ftrs, len(class_counts))
             
