@@ -4,14 +4,9 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.optim import lr_scheduler
 import numpy as np
-import torchvision
-from torchvision import datasets, models, transforms
-import matplotlib.pyplot as plt
+from torchvision import datasets
 import time
-import os
 import copy
-import torch.nn.functional as F
-from torch.utils.data import random_split
 from tqdm import tqdm
 
 from torch.utils.data import DataLoader, Subset

@@ -1,11 +1,11 @@
-from torchvision import datasets, models, transforms
+from torchvision import models
 import torch.nn as nn
 import torch
 import timm
 from MedViT import MedViT_small
 from MedViT import MedViT_base
 from MedViT import MedViT_large
-from torchsummary import summary
+
 resnet_list = ['resnet18', 'resnet101', 'resnet152']
 resnet_mod_list = ['resnet18_mod1', 'resnet101_mod1', 'resnet152_mod1']
 densenet_list = ['densenet121', 'densenet161', 'densenet169', 'densenet201']
