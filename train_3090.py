@@ -2,116 +2,103 @@ from C_BASELINE import train_mod
 import torch
 from C_other_func import Notification
 # model 1
-name = "test_model_1019"
-path = "D:/REDO/MEDVIT_B/"
-# path = "E:/PROCESS_2023/REDO/MEDVIT_S/"
-model_things = {
-    'data_dir' : "D:/P2023/DATA/glomer_cg(2)",
-    # 'data_dir' : "E:\Data\iga_mgn",
-    'train_ratio' : 0.6,
-    'val_ratio' : 0.5,
-    'random_seed' : 42,
-    'batch_size' : 20,
-    'log_path' : f"{path}{name}.txt",
-    'weight_store_path' : f"{path}/WEIGHT/{name}(1).pt",
-    'learning_rate' : 0.01,
-    'num_of_epoch' : 20,
-    'lr_method' : "LR_stepping",
-    'pretrain' : True,
-    'pretrain_category' : 2,
-    'model_name' : 'medvit_base',
-    'other_info' : "To test how augmentation data(4x) improve acc",
-    'data_transforms_op' : 1,
-}
-try:
-    model = train_mod(model_things)
-    weight_store_path = model_things['weight_store_path']
-    torch.save(model.state_dict(), weight_store_path)
-except Exception as e:
-    print(e)
-    mes = f"""Hi Casper,
-    
-Training is failed! Please have a look.
-[ Error: {str(e)} ]
-
-Hope you well,
-RTX3090 Founder Edition
-        """
-    sub = f"{name} WENT WRONG!" ##
-    # Notification(sub, mes)
-
-name = "test_model_1019"
-path = "D:/REDO/MEDVIT_S/"
-# path = "E:/PROCESS_2023/REDO/MEDVIT_S/"
-model_things = {
-    'data_dir' : "D:/P2023/DATA/glomer_cg(2)",
-    # 'data_dir' : "E:\Data\iga_mgn",
-    'train_ratio' : 0.6,
-    'val_ratio' : 0.5,
-    'random_seed' : 42,
-    'batch_size' : 20,
-    'log_path' : f"{path}{name}.txt",
-    'weight_store_path' : f"{path}/WEIGHT/{name}(1).pt",
-    'learning_rate' : 0.01,
-    'num_of_epoch' : 20,
-    'lr_method' : "LR_stepping",
-    'pretrain' : True,
-    'pretrain_category' : 2,
-    'model_name' : 'medvit_small',
-    'other_info' : "To test how augmentation data(4x) improve acc",
-    'data_transforms_op' : 1,
-}
-try:
-    model = train_mod(model_things)
-    weight_store_path = model_things['weight_store_path']
-    torch.save(model.state_dict(), weight_store_path)
-except Exception as e:
-    print(e)
-    mes = f"""Hi Casper,
-    
-Training is failed! Please have a look.
-[ Error: {str(e)} ]
-
-Hope you well,
-RTX3090 Founder Edition
-        """
-    sub = f"{name} WENT WRONG!" ##
-    # Notification(sub, mes)
-
-name = "test_model_1019_dt2"
+name = "diff_dataset_1020"
 path = "D:/REDO/RESNET101/"
-# path = "E:/PROCESS_2023/REDO/MEDVIT_S/"
+dropout_prob = 0
+ii= 1
 model_things = {
-    'data_dir' : "D:/P2023/DATA/glomer_cg(2)",
-    # 'data_dir' : "E:\Data\iga_mgn",
+    'data_dir' : "D:/P2023/DATA/glomer_cg",
     'train_ratio' : 0.6,
     'val_ratio' : 0.5,
     'random_seed' : 42,
     'batch_size' : 20,
     'log_path' : f"{path}{name}.txt",
-    'weight_store_path' : f"{path}/WEIGHT/{name}(1).pt",
+    'weight_store_path' : f"{path}/WEIGHT/{name}({ii}).pt",
     'learning_rate' : 0.01,
     'num_of_epoch' : 20,
     'lr_method' : "LR_stepping",
     'pretrain' : True,
-    'pretrain_category' : 2,
+    'pretrain_category' : None,
     'model_name' : 'resnet101',
-    'other_info' : "To test how augmentation data(4x) improve acc",
+    'other_info' : "Try to test model and see the result of classifying in different dataset. \nHope it goes well",
     'data_transforms_op' : 2,
+    'dropout_prob' :  dropout_prob
 }
-try:
-    model = train_mod(model_things)
-    weight_store_path = model_things['weight_store_path']
-    torch.save(model.state_dict(), weight_store_path)
-except Exception as e:
-    print(e)
-    mes = f"""Hi Casper,
-    
-Training is failed! Please have a look.
-[ Error: {str(e)} ]
+model = train_mod(model_things)
+weight_store_path = model_things['weight_store_path']
+torch.save(model.state_dict(), weight_store_path)
 
-Hope you well,
-RTX3090 Founder Edition
-        """
-    sub = f"{name} WENT WRONG!" ##
-    # Notification(sub, mes)
+dropout_prob = 0
+ii= 2
+model_things = {
+    'data_dir' : "D:/P2023/DATA/glomer_tvgh",
+    'train_ratio' : 0.6,
+    'val_ratio' : 0.5,
+    'random_seed' : 42,
+    'batch_size' : 20,
+    'log_path' : f"{path}{name}.txt",
+    'weight_store_path' : f"{path}/WEIGHT/{name}({ii}).pt",
+    'learning_rate' : 0.01,
+    'num_of_epoch' : 20,
+    'lr_method' : "LR_stepping",
+    'pretrain' : True,
+    'pretrain_category' : None,
+    'model_name' : 'resnet101',
+    'other_info' : "Try to test model and see the result of classifying in different dataset. \nHope it goes well",
+    'data_transforms_op' : 2,
+    'dropout_prob' :  dropout_prob
+}
+model = train_mod(model_things)
+weight_store_path = model_things['weight_store_path']
+torch.save(model.state_dict(), weight_store_path)
+
+
+name = "diff_dataset_1020"
+path = "D:/REDO/RESNET152/"
+dropout_prob = 0
+ii= 1
+model_things = {
+    'data_dir' : "D:/P2023/DATA/glomer_cg",
+    'train_ratio' : 0.6,
+    'val_ratio' : 0.5,
+    'random_seed' : 42,
+    'batch_size' : 20,
+    'log_path' : f"{path}{name}.txt",
+    'weight_store_path' : f"{path}/WEIGHT/{name}({ii}).pt",
+    'learning_rate' : 0.01,
+    'num_of_epoch' : 20,
+    'lr_method' : "LR_stepping",
+    'pretrain' : True,
+    'pretrain_category' : None,
+    'model_name' : 'resnet152',
+    'other_info' : "Try to test model and see the result of classifying in different dataset. \nHope it goes well",
+    'data_transforms_op' : 2,
+    'dropout_prob' :  dropout_prob
+}
+model = train_mod(model_things)
+weight_store_path = model_things['weight_store_path']
+torch.save(model.state_dict(), weight_store_path)
+
+dropout_prob = 0
+ii= 2
+model_things = {
+    'data_dir' : "D:/P2023/DATA/glomer_tvgh",
+    'train_ratio' : 0.6,
+    'val_ratio' : 0.5,
+    'random_seed' : 42,
+    'batch_size' : 20,
+    'log_path' : f"{path}{name}.txt",
+    'weight_store_path' : f"{path}/WEIGHT/{name}({ii}).pt",
+    'learning_rate' : 0.01,
+    'num_of_epoch' : 20,
+    'lr_method' : "LR_stepping",
+    'pretrain' : True,
+    'pretrain_category' : None,
+    'model_name' : 'resnet152',
+    'other_info' : "Try to test model and see the result of classifying in different dataset. \nHope it goes well",
+    'data_transforms_op' : 2,
+    'dropout_prob' :  dropout_prob
+}
+model = train_mod(model_things)
+weight_store_path = model_things['weight_store_path']
+torch.save(model.state_dict(), weight_store_path)
