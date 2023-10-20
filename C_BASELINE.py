@@ -175,7 +175,7 @@ def train_model(model, model_things):
     
     send_email(log_message, model_name)
     
-    pprint()
+    pprint("="*20)
     pprint()
     model.load_state_dict(best_model_wts) # load best model weights
     return model

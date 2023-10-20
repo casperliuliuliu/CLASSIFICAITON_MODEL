@@ -42,9 +42,10 @@ def get_model(model_name, pretrain, class_counts, pretrain_category, dropout_pro
     else:
         model = get_model_structure(model_name, pretrain)
         if model_name in resnet_mod_list:
+            print("## YOU ARE USING A MODED MODEL ##")
             num_ftrs = model.fc.in_features
             model.fc = nn.Sequential(
-                nn.Dropout(p=dropout_prob, inplace = False),
+                nn.Dropout(p=dropout_prob),
                 nn.Linear(num_ftrs, len(class_counts)),
             )
         if model_name in resnet_list:
