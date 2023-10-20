@@ -28,7 +28,8 @@ def get_dataloaders(data_dir, data_transforms, train_ratio, val_ratio, batch_siz
     train_dataset = datasets.ImageFolder(data_dir, transform = data_transforms['train'])
     val_dataset = datasets.ImageFolder(data_dir, transform = data_transforms['val'])
     test_dataset = datasets.ImageFolder(data_dir, transform = data_transforms['test'])
-    
+    for i, class_name in enumerate(train_dataset.classes):
+        pprint(f"Class label {i}: {class_name}")
     # obtain training indices that will be used for validation
     num_train = len(test_dataset)
     indices = list(range(num_train))
@@ -70,9 +71,6 @@ def get_dataloaders(data_dir, data_transforms, train_ratio, val_ratio, batch_siz
     
 def get_class_counts(data_dir):
     train_dataset = datasets.ImageFolder(data_dir)
-    for i, class_name in enumerate(train_dataset.classes):
-        pprint(f"Class label {i}: {class_name}")
-        
     class_counts = {}
     for _, label in train_dataset.samples:
         class_name = train_dataset.classes[label]

@@ -5,6 +5,7 @@ import timm
 from MedViT import MedViT_small
 from MedViT import MedViT_base
 from MedViT import MedViT_large
+from torchsummary import summary
 resnet_list = ['resnet18', 'resnet101', 'resnet152']
 resnet_mod_list = ['resnet18_mod1', 'resnet101_mod1', 'resnet152_mod1']
 densenet_list = ['densenet121', 'densenet161', 'densenet169', 'densenet201']
@@ -51,7 +52,6 @@ def get_model(model_name, pretrain, class_counts, pretrain_category, dropout_pro
         
     else:
         model = get_model_structure(model_name, pretrain)
-        print(model)
         if model_name in resnet_mod_list:
             print("## YOU ARE USING A MODED MODEL ##")
             num_ftrs = model.fc.in_features
