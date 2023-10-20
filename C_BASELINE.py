@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import time
 import os
 import copy
+import torch.nn.functional as F
 from torch.utils.data import random_split
 from tqdm import tqdm
 
@@ -21,27 +22,29 @@ from C_model_structure import get_model
 from C_datatransform import get_data_transforms
 from C_other_func import write_log, send_email
 filename = ""
-    
+
 def get_dataloaders(data_dir, data_transforms, train_ratio, val_ratio, batch_size):
     # Create a single merged dataset
     train_dataset = datasets.ImageFolder(data_dir, transform = data_transforms['train'])
     val_dataset = datasets.ImageFolder(data_dir, transform = data_transforms['val'])
     test_dataset = datasets.ImageFolder(data_dir, transform = data_transforms['test'])
-    # if 'aug0' in data_transforms.keys():
-    #     merge_dataset = train_dataset
-    # else:
     
     # obtain training indices that will be used for validation
     num_train = len(test_dataset)
     indices = list(range(num_train))
+    pprint("--------- INDEX checking ---------")
+    pprint(f"Original: {indices[:5]}")
     random.shuffle(indices)
+    pprint(f"Shuffled: {indices[:5]}")
+    pprint("--------- INDEX shuffled ---------\n")
+
     split_train = int(np.floor(train_ratio * num_train))
     split_val = split_train + int(np.floor(val_ratio * (num_train-split_train)))
     train_idx, val_idx, test_idx = indices[0:split_train], indices[split_train:split_val], indices[split_val:]
     merge_dataset = Subset(train_dataset, train_idx)
-    print(data_transforms.keys())
+    # file_names = [path for path, _ in train_dataset.imgs]
     for ii in range(len(data_transforms.keys())-3):
-        print(ii)
+        # print(ii)
         aug_dataset = datasets.ImageFolder(data_dir, transform = data_transforms[f'aug{ii}'])
         aug_sub = Subset(aug_dataset, train_idx)
         merge_dataset = ConcatDataset([merge_dataset,aug_sub])
@@ -55,6 +58,7 @@ def get_dataloaders(data_dir, data_transforms, train_ratio, val_ratio, batch_siz
     pprint(f"Number of train samples: {len(train_loader)} batches/ {len(train_loader.dataset)} datapoints")
     pprint(f"Number of val samples: {len(val_loader)} batches/ {len(val_loader.dataset)} datapoints")
     pprint(f"Number of test samples: {len(test_loader)} batches/ {len(test_loader.dataset)} datapoints")
+    pprint(f"Data Transform: {data_transforms.keys()}")
     pprint(f"")
     
     dataloaders = {
@@ -89,7 +93,7 @@ def get_dataset_sizes(dataloaders):
         'test': len(dataloaders['test'].dataset)
     }
     return dataset_sizes
-    
+
 def train_model(model, model_things):
     NUM_EPOCHS = model_things['num_of_epoch']
     data_dir = model_things['data_dir']
@@ -97,7 +101,7 @@ def train_model(model, model_things):
     train_ratio = model_things['train_ratio']
     val_ratio = model_things['val_ratio']
     batch_size = model_things['batch_size']
-    # model_name = model_things['model_name']
+    model_name = model_things['model_name']
     data_transforms_op = model_things['data_transforms_op']
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=learning_rate)
@@ -131,7 +135,11 @@ def train_model(model, model_things):
                 with torch.set_grad_enabled(phase == 'train'): # forward # track history if only in train
                     outputs = model(inputs)
                     _, preds = torch.max(outputs, 1)
+                    # probabilities = F.softmax(outputs, dim=1)
+                    # print(probabilities)
                     loss = criterion(outputs, labels)
+                    # print(preds)
+                    # print(labels)
                     # print(loss)
                     if phase == 'train': # backward + optimize only if in training phase
                         optimizer.zero_grad()
@@ -179,13 +187,14 @@ def train_mod(model_things):
     data_dir = model_things['data_dir']
     pretrain_category = model_things['pretrain_category']
     dropout_prob = model_things['dropout_prob']
+    random.seed(model_things['random_seed'])
     
     global filename
     filename = log_path
     
     class_counts = get_class_counts(data_dir)
     model = get_model(model_name, pretrain, class_counts, pretrain_category, dropout_prob)
-    print(model)
+    # print(model)
     model = train_model(model, model_things)
     return model
     

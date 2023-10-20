@@ -44,7 +44,7 @@ def get_model(model_name, pretrain, class_counts, pretrain_category, dropout_pro
         if model_name in resnet_mod_list:
             num_ftrs = model.fc.in_features
             model.fc = nn.Sequential(
-                nn.Dropout(p=dropout_prob, inplace = True),
+                nn.Dropout(p=dropout_prob, inplace = False),
                 nn.Linear(num_ftrs, len(class_counts)),
             )
         if model_name in resnet_list:
