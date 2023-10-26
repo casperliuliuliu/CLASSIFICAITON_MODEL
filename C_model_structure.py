@@ -57,10 +57,13 @@ def get_model_structure(model_name, pretrain=None):
         return MedViT_small(pretrained = pretrain)
         
     return None
-    
+def get_ensemble(model_name):
+    for model in model_name:
+        print(model)
+
 def get_model(model_name, pretrain, class_counts, pretrain_category, dropout_prob):
     if isinstance(model_name, list):
-        model = EnsembleModel(model_name)
+        model = get_ensemble(model_name)
     elif isinstance(pretrain, str): # using my own pretrained weight.
         print(f"Loading up your own model weight:{pretrain}")
         model = get_model_structure(model_name)
