@@ -55,26 +55,41 @@ def get_model_structure(model_name, pretrain=None):
         return MedViT_base(pretrained = pretrain)
     elif model_name == "medvit_small":
         return MedViT_small(pretrained = pretrain)
-        
     return None
-def get_ensemble(model_name):
+
+def get_ensemble(model_name, pretrain, class_counts, pretrain_category, dropout_prob):
+    model_list = []
     for model in model_name:
-        print(model)
+        temp_model = get_model(model_name, pretrain, class_counts, pretrain_category, dropout_prob)
+        model_list.append(temp_model)
+    model = EnsembleModel(model_list)
+    return model
 
 def get_model(model_name, pretrain, class_counts, pretrain_category, dropout_prob):
+    # This is for building ensemble model 
     if isinstance(model_name, list):
-        model = get_ensemble(model_name)
+        model = get_ensemble(model_name, pretrain, class_counts, pretrain_category, dropout_prob)
+        print(f"Ensemble model load sucessfully!")
+
+    # Using my own pretrained model weights
     elif isinstance(pretrain, str): # using my own pretrained weight.
         print(f"Loading up your own model weight:{pretrain}")
         model = get_model_structure(model_name)
-        num_ftrs = model.fc.in_features
-        model.fc = nn.Linear(num_ftrs, pretrain_category)
-        state_dict = torch.load(pretrain)
-        model.load_state_dict(state_dict)
+        if model_name in resnet_list:
+            num_ftrs = model.fc.in_features
+            model.fc = nn.Linear(num_ftrs, pretrain_category)
+
+
         print(f"Weight Loaded up successfully!")
-        
+
+    # Building up model structure
     else:
-        model = get_model_structure(model_name, pretrain)
+        if isinstance(pretrain, str): # using my own pretrained weight.
+            print(f"Loading up your own model weight:{pretrain}")
+            model = get_model_structure(model_name, False)
+        else: 
+            model = get_model_structure(model_name, pretrain)
+            
         if model_name in resnet_mod_list:
             print("## YOU ARE USING A MODED MODEL ##")
             num_ftrs = model.fc.in_features
@@ -96,5 +111,9 @@ def get_model(model_name, pretrain, class_counts, pretrain_category, dropout_pro
             
         elif model_name in medvit_list:
             model.proj_head[0] = torch.nn.Linear(in_features=1024, out_features=len(class_counts), bias=True)
-            
+
+        if isinstance(pretrain, str): # using my own pretrained weight.
+            state_dict = torch.load(pretrain)
+            model.load_state_dict(state_dict)
+
     return model
