@@ -27,6 +27,7 @@ for ii in range(1, 5):
     model = train_mod(model_things)
     weight_store_path = model_things['weight_store_path']
     torch.save(model.state_dict(), weight_store_path)
+    
 path = "E:/PROCESS_2023/REDO/RESNET101/"
 for ii in range(0, 5):
     dropout_prob = ii * 2 * 0.1

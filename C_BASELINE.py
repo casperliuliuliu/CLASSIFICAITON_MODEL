@@ -14,6 +14,7 @@ from datetime import datetime
 import random
 from torch.utils.data import ConcatDataset
 from C_model_structure import get_model
+from C_model_structure import get_ensemble_model
 from C_datatransform import get_data_transforms
 from C_other_func import write_log, send_email
 filename = ""
@@ -183,14 +184,18 @@ def train_mod(model_things):
     data_dir = model_things['data_dir']
     pretrain_category = model_things['pretrain_category']
     dropout_prob = model_things['dropout_prob']
+    ensemble_model = model_things['ensemble_model']
     random.seed(model_things['random_seed'])
     
     global filename
     filename = log_path
     
     class_counts = get_class_counts(data_dir)
-    model = get_model(model_name, pretrain, class_counts, pretrain_category, dropout_prob)
-    # print(model)
-    model = train_model(model, model_things)
+    if ensemble_model:
+        model = get_ensemble_model(model_name, pretrain, class_counts, pretrain_category, dropout_prob)
+    else:
+        model = get_model(model_name, pretrain, class_counts, pretrain_category, dropout_prob)
+    print(model)
+    # model = train_model(model, model_things)
     return model
     

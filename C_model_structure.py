@@ -71,7 +71,7 @@ def get_model_structure(model_name, pretrain=None):
         return MedViT_small(pretrained = pretrain)
     return None
 
-def get_ensemble(model_name, pretrain, class_counts, pretrain_category, dropout_prob):
+def get_ensemble_model(model_name, pretrain, class_counts, pretrain_category, dropout_prob):
     model_list = []
     for model in model_name:
         temp_model = get_model(model_name, pretrain, class_counts, pretrain_category, dropout_prob)
