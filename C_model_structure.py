@@ -6,7 +6,7 @@ from MedViT import MedViT_small
 from MedViT import MedViT_base
 from MedViT import MedViT_large
 
-class EnsembleModel(nn.Module):
+class EnsembleModel(nn.Module): # This model is only eval-able, not trainable
     def __init__(self, base_models):
         super(EnsembleModel, self).__init__()
         self.base_models = nn.ModuleList(base_models)
@@ -23,6 +23,20 @@ class EnsembleModel(nn.Module):
         ensemble_output = torch.mean(torch.stack(predictions), dim=0)
         return ensemble_output
 
+# class EnsembleModel_train_eval(nn.Module):
+#     def __init__(self, models_dict, num_classes):
+#         super(EnsembleModel, self).__init__()
+#         self.models = nn.ModuleList(list(models_dict.values()))
+#         self.fc = nn.Linear(len(models_dict) * num_ftrs, num_classes)
+
+#     def forward(self, x):
+#         predictions = []
+#         for model in self.models:
+#             predictions.append(model(x))
+#         combined_predictions = torch.cat(predictions, dim=1)
+#         output = self.fc(combined_predictions)
+#         return output
+    
 resnet_list = ['resnet18', 'resnet101', 'resnet152']
 resnet_mod_list = ['resnet18_mod1', 'resnet101_mod1', 'resnet152_mod1']
 densenet_list = ['densenet121', 'densenet161', 'densenet169', 'densenet201']
