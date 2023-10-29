@@ -102,7 +102,7 @@ def train_model(model, model_things):
     data_transforms_op = model_things['data_transforms_op']
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=learning_rate)
-    step_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=50, gamma=0.1)
+    # step_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=50, gamma=0.1)
     class_counts = get_class_counts(data_dir)
     data_transforms = get_data_transforms(data_transforms_op)
     dataloaders = get_dataloaders(data_dir, data_transforms, train_ratio, val_ratio, batch_size)
@@ -132,12 +132,10 @@ def train_model(model, model_things):
                 with torch.set_grad_enabled(phase == 'train'): # forward # track history if only in train
                     outputs = model(inputs)
                     _, preds = torch.max(outputs, 1)
+                    # This is for printing the probability of each preds
                     # probabilities = F.softmax(outputs, dim=1)
                     # print(probabilities)
                     loss = criterion(outputs, labels)
-                    # print(preds)
-                    # print(labels)
-                    # print(loss)
                     if phase == 'train': # backward + optimize only if in training phase
                         optimizer.zero_grad()
                         loss.backward()
@@ -148,7 +146,8 @@ def train_model(model, model_things):
                     confus[ labels.data[ii] ][ preds[ii] ]+=1
                     
             if phase == 'train':
-                step_lr_scheduler.step()
+                # step_lr_scheduler.step()
+                pass
             epoch_loss = running_loss / dataset_sizes[phase]
             epoch_acc = running_corrects.double() / dataset_sizes[phase]
             pprint(confus)
@@ -195,7 +194,7 @@ def train_mod(model_things):
         model = get_ensemble_model(model_name, pretrain, class_counts, pretrain_category, dropout_prob)
     else:
         model = get_model(model_name, pretrain, class_counts, pretrain_category, dropout_prob)
-    print(model)
-    # model = train_model(model, model_things)
+    # print(model)
+    model = train_model(model, model_things)
     return model
     
