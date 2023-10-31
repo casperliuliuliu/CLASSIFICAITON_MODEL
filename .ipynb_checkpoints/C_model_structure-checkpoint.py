@@ -6,7 +6,7 @@ from MedViT import MedViT_small
 from MedViT import MedViT_base
 from MedViT import MedViT_large
 
-class EnsembleModel(nn.Module):
+class EnsembleModel(nn.Module): # This model is only eval-able, not trainable
     def __init__(self, base_models):
         super(EnsembleModel, self).__init__()
         self.base_models = nn.ModuleList(base_models)
@@ -23,6 +23,20 @@ class EnsembleModel(nn.Module):
         ensemble_output = torch.mean(torch.stack(predictions), dim=0)
         return ensemble_output
 
+# class EnsembleModel_train_eval(nn.Module):
+#     def __init__(self, models_dict, num_classes):
+#         super(EnsembleModel, self).__init__()
+#         self.models = nn.ModuleList(list(models_dict.values()))
+#         self.fc = nn.Linear(len(models_dict) * num_ftrs, num_classes)
+
+#     def forward(self, x):
+#         predictions = []
+#         for model in self.models:
+#             predictions.append(model(x))
+#         combined_predictions = torch.cat(predictions, dim=1)
+#         output = self.fc(combined_predictions)
+#         return output
+    
 resnet_list = ['resnet18', 'resnet101', 'resnet152']
 resnet_mod_list = ['resnet18_mod1', 'resnet101_mod1', 'resnet152_mod1']
 densenet_list = ['densenet121', 'densenet161', 'densenet169', 'densenet201']
@@ -55,43 +69,91 @@ def get_model_structure(model_name, pretrain=None):
         return MedViT_base(pretrained = pretrain)
     elif model_name == "medvit_small":
         return MedViT_small(pretrained = pretrain)
-        
     return None
-    
+
+def get_ensemble_model(model_name, pretrain, class_counts, pretrain_category, dropout_prob):
+    model_list = []
+    for ii in range(len(model_name)):
+        temp_model = get_model(model_name[ii], pretrain[ii], class_counts, pretrain_category[ii], dropout_prob[ii])
+        model_list.append(temp_model)
+    model = EnsembleModel(model_list)
+    print(f"[!!!] Ensemble model load sucessfully!")
+    return model
+
 def get_model(model_name, pretrain, class_counts, pretrain_category, dropout_prob):
-    if isinstance(model_name, list):
-        model = EnsembleModel(model_name)
-    elif isinstance(pretrain, str): # using my own pretrained weight.
-        print(f"Loading up your own model weight:{pretrain}")
-        model = get_model_structure(model_name)
-        num_ftrs = model.fc.in_features
-        model.fc = nn.Linear(num_ftrs, pretrain_category)
-        state_dict = torch.load(pretrain)
-        model.load_state_dict(state_dict)
-        print(f"Weight Loaded up successfully!")
-        
-    else:
+    num_class_counts = len(class_counts)
+    
+    if isinstance(pretrain, str): # using my own pretrained weight.
+        print(f"[!!!] Loading up your own model weight:{pretrain}")
+        model = get_model_structure(model_name, False)
+        if pretrain_category != num_class_counts:
+            """ 
+            If the pretrain weight class count is not the same as current task, 
+            then change it the current class count to pretrained weight class count first,
+            in order to load the pretrain weight.
+            """
+            num_class_counts = pretrain_category
+            print(f"[!!!] Changing class counts to {num_class_counts} first for pretrained weight loading.\n")
+        else:
+            print(f"[!!!] The pretrained weight class count is the same as current task. No need to change output layer for weight loading.\n")
+    else: 
         model = get_model_structure(model_name, pretrain)
+
+    if model_name in resnet_mod_list:
+        num_ftrs = model.fc.in_features
         if model_name in resnet_mod_list:
-            print("## YOU ARE USING A MODED MODEL ##")
-            num_ftrs = model.fc.in_features
             model.fc = nn.Sequential(
                 nn.Dropout(p=dropout_prob),
-                nn.Linear(num_ftrs, len(class_counts)),
+                nn.Linear(num_ftrs, num_class_counts),
             )
-        elif model_name in resnet_list:
-            num_ftrs = model.fc.in_features
-            model.fc = nn.Linear(num_ftrs, len(class_counts))
+            print("[!!!] YOU ARE USING A MODED MODEL")
+
+    elif model_name in resnet_list:
+        num_ftrs = model.fc.in_features
+        model.fc = nn.Linear(num_ftrs, num_class_counts)
+
+    elif model_name in densenet_list:
+        num_ftrs = model.classifier.in_features
+        model.classifier = nn.Linear(num_ftrs, num_class_counts)
+        
+    elif model_name in vit_list:
+        num_ftrs = model.head.in_features
+        model.head = nn.Linear(num_ftrs, num_class_counts)
+        
+    elif model_name in medvit_list:
+        model.proj_head[0] = torch.nn.Linear(in_features=1024, out_features=num_class_counts, bias=True)
+
+    if isinstance(pretrain, str): # using my own pretrained weight.
+        state_dict = torch.load(pretrain)
+        model.load_state_dict(state_dict)
+        print(f"[!!!] Weight Loaded up successfully!")
+
+        num_class_counts = len(class_counts) # Changing num_class_counts back to original task class count.
+        if pretrain_category != num_class_counts: # If pretrain_category is not the same as num_class_count, then we have to restruct current model structure to fit new task.
+            print(f"[!!!] Changing class counts back to {num_class_counts} for model structure.")
             
-        elif model_name in densenet_list:
-            num_ftrs = model.classifier.in_features
-            model.classifier = nn.Linear(num_ftrs, len(class_counts))
-            
-        elif model_name in vit_list:
-            num_ftrs = model.head.in_features
-            model.head = nn.Linear(num_ftrs, len(class_counts))
-            
-        elif model_name in medvit_list:
-            model.proj_head[0] = torch.nn.Linear(in_features=1024, out_features=len(class_counts), bias=True)
-            
+            if model_name in resnet_mod_list:
+                num_ftrs = model.fc.in_features
+                if model_name in resnet_mod_list:
+                    model.fc = nn.Sequential(
+                        nn.Dropout(p=dropout_prob),
+                        nn.Linear(num_ftrs, num_class_counts),
+                    )
+                    print("[!!!] YOU ARE USING A MODED MODEL")
+
+            elif model_name in resnet_list:
+                num_ftrs = model.fc.in_features
+                model.fc = nn.Linear(num_ftrs, num_class_counts)
+
+            elif model_name in densenet_list:
+                num_ftrs = model.classifier.in_features
+                model.classifier = nn.Linear(num_ftrs, num_class_counts)
+                
+            elif model_name in vit_list:
+                num_ftrs = model.head.in_features
+                model.head = nn.Linear(num_ftrs, num_class_counts)
+                
+            elif model_name in medvit_list:
+                model.proj_head[0] = torch.nn.Linear(in_features=1024, out_features=num_class_counts, bias=True)
+
     return model

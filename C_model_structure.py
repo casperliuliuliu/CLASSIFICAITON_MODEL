@@ -73,18 +73,18 @@ def get_model_structure(model_name, pretrain=None):
 
 def get_ensemble_model(model_name, pretrain, class_counts, pretrain_category, dropout_prob):
     model_list = []
-    for model in model_name:
-        temp_model = get_model(model_name, pretrain, class_counts, pretrain_category, dropout_prob)
+    for ii in range(len(model_name)):
+        temp_model = get_model(model_name[ii], pretrain[ii], class_counts, pretrain_category[ii], dropout_prob[ii])
         model_list.append(temp_model)
     model = EnsembleModel(model_list)
-    print(f"Ensemble model load sucessfully!")
+    print(f"[!!!] Ensemble model load sucessfully!")
     return model
 
 def get_model(model_name, pretrain, class_counts, pretrain_category, dropout_prob):
     num_class_counts = len(class_counts)
     
     if isinstance(pretrain, str): # using my own pretrained weight.
-        print(f"Loading up your own model weight:{pretrain}")
+        print(f"[!!!] Loading up your own model weight:{pretrain}")
         model = get_model_structure(model_name, False)
         if pretrain_category != num_class_counts:
             """ 
@@ -93,9 +93,9 @@ def get_model(model_name, pretrain, class_counts, pretrain_category, dropout_pro
             in order to load the pretrain weight.
             """
             num_class_counts = pretrain_category
-            print(f"Changing class counts to {num_class_counts} first for pretrained weight loading.")
+            print(f"[!!!] Changing class counts to {num_class_counts} first for pretrained weight loading.\n")
         else:
-            print(f"The pretrained weight class count is the same as current task. No need to change output layer for weight loading.")
+            print(f"[!!!] The pretrained weight class count is the same as current task. No need to change output layer for weight loading.\n")
     else: 
         model = get_model_structure(model_name, pretrain)
 
@@ -106,7 +106,7 @@ def get_model(model_name, pretrain, class_counts, pretrain_category, dropout_pro
                 nn.Dropout(p=dropout_prob),
                 nn.Linear(num_ftrs, num_class_counts),
             )
-            print("## YOU ARE USING A MODED MODEL ##")
+            print("[!!!] YOU ARE USING A MODED MODEL")
 
     elif model_name in resnet_list:
         num_ftrs = model.fc.in_features
@@ -126,11 +126,11 @@ def get_model(model_name, pretrain, class_counts, pretrain_category, dropout_pro
     if isinstance(pretrain, str): # using my own pretrained weight.
         state_dict = torch.load(pretrain)
         model.load_state_dict(state_dict)
-        print(f"Weight Loaded up successfully!")
+        print(f"[!!!] Weight Loaded up successfully!")
 
         num_class_counts = len(class_counts) # Changing num_class_counts back to original task class count.
         if pretrain_category != num_class_counts: # If pretrain_category is not the same as num_class_count, then we have to restruct current model structure to fit new task.
-            print(f"Changing class counts back to {num_class_counts} for model structure.")
+            print(f"[!!!] Changing class counts back to {num_class_counts} for model structure.")
             
             if model_name in resnet_mod_list:
                 num_ftrs = model.fc.in_features
@@ -139,7 +139,7 @@ def get_model(model_name, pretrain, class_counts, pretrain_category, dropout_pro
                         nn.Dropout(p=dropout_prob),
                         nn.Linear(num_ftrs, num_class_counts),
                     )
-                    print("## YOU ARE USING A MODED MODEL ##")
+                    print("[!!!] YOU ARE USING A MODED MODEL")
 
             elif model_name in resnet_list:
                 num_ftrs = model.fc.in_features
