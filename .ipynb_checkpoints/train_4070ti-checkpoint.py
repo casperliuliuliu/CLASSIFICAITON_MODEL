@@ -37,12 +37,14 @@ model_things = {
     'ensemble_model': False,
 }
 
-model_list = ['densenet121', 'densenet161', 'densenet169', 'densenet201', 'medvit_small', 'medvit_base', 'medvit_large']
-model_list = ['densenet201', 'medvit_small', 'medvit_base', 'medvit_large']
+# model_list = ['densenet121', 'densenet161', 'densenet169', 'densenet201', 'medvit_small', 'medvit_base', 'medvit_large']
+# model_list = ['densenet201', 'medvit_small', 'medvit_base', 'medvit_large']
+model_list = ['resnet101', 'resnet101', 'resnet101', 'resnet101']
+
 for ii in range(len(model_list)):
     mod_running = model_list[ii]
     print(mod_running)
-    name = "ensemble_pretrain_1030"
+    name = "same_1101"
     path = f"E:/PROCESS_2023/REDO/{mod_running}/"
     dropout_prob = None
     model_things = {
@@ -50,16 +52,16 @@ for ii in range(len(model_list)):
         'train_ratio' : 0.6,
         'val_ratio' : 0.5,
         'random_seed' : 42,
-        'batch_size' : 5,
+        'batch_size' : 40,
         'log_path' : f"{path}{name}.txt",
         'weight_store_path' : f"{path}/WEIGHT/{name}({ii}).pt",
         'learning_rate' : 0.01,
         'num_of_epoch' : 20,
         'lr_method' : "LR_stepping",
         'pretrain' : True,
-        'pretrain_category' : 2,
+        'pretrain_category' : None,
         'model_name' : mod_running,
-        'other_info' : "To train for ensemble base model weight.",
+        'other_info' : "To train for ensemble base model weight, and also for weight averaging.",
         'data_transforms_op' : 2,
         'dropout_prob' :  dropout_prob,
         'ensemble_model': False,

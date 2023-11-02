@@ -82,7 +82,7 @@ def get_ensemble_model(model_name, pretrain, class_counts, pretrain_category, dr
 
 def get_model(model_name, pretrain, class_counts, pretrain_category, dropout_prob):
     num_class_counts = len(class_counts)
-    
+    print(model_name, pretrain)
     if isinstance(pretrain, str): # using my own pretrained weight.
         print(f"[!!!] Loading up your own model weight:{pretrain}")
         model = get_model_structure(model_name, False)
@@ -96,7 +96,7 @@ def get_model(model_name, pretrain, class_counts, pretrain_category, dropout_pro
             print(f"[!!!] Changing class counts to {num_class_counts} first for pretrained weight loading.\n")
         else:
             print(f"[!!!] The pretrained weight class count is the same as current task. No need to change output layer for weight loading.\n")
-    else: 
+    else:
         model = get_model_structure(model_name, pretrain)
 
     if model_name in resnet_mod_list:
@@ -122,7 +122,6 @@ def get_model(model_name, pretrain, class_counts, pretrain_category, dropout_pro
         
     elif model_name in medvit_list:
         model.proj_head[0] = torch.nn.Linear(in_features=1024, out_features=num_class_counts, bias=True)
-
     if isinstance(pretrain, str): # using my own pretrained weight.
         state_dict = torch.load(pretrain)
         model.load_state_dict(state_dict)
