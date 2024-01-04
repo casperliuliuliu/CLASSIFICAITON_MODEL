@@ -60,15 +60,33 @@ dataset = ["D:\P2023\DATA\glomer_cg(2)", "D:\P2023\DATA\glomer_cg", "D:\P2023\DA
 # pretrain_category = [5]
 # dropout_prob = [None]
 
-model_list = ['medvit_large']
-pretrain = [True]
-pretrain_category = [None]
-dropout_prob = [None]
+model_list = [
+    'medvit_small',
+    'medvit_base',
+    'medvit_large',
+    # 'densenet161',
+    # 'resnet152',
+    # 'resnet101',
+    # 'resnet18',
+]
+# the iteration mainly depends on the size of model_list.
+pretrain = [
+    'D:/REDO/medvit_small/WEIGHT/ensemble_pretrain_1031(1).pt',
+    'D:/REDO/medvit_base/WEIGHT/ensemble_pretrain_1031(0).pt',
+    'D:/REDO/medvit_large/WEIGHT/ensemble_pretrain_1031(0).pt',
+    'D:/REDO/densenet161/WEIGHT/ensemble_pretrain_1031(2).pt',
+    'D:/REDO/resnet152/WEIGHT/diff_dataset_1020(0).pt',
+    'D:/REDO/resnet101/WEIGHT/diff_dataset_1020(2).pt',
+    'D:/REDO/resnet18/WEIGHT/diff_dataset_1020(4).pt',
+]
+# pretrain = [True]
+pretrain_category = [5,5,5]
+dropout_prob = [0,0,0]
 
 mod_running = "ensemble_resnet2"
 print(mod_running)
 
-name = "ensemble_test_1031"
+name = "ensemble_test_1103"
 path = f"D:/REDO/{mod_running}/"
 
 model_things = {
@@ -76,7 +94,7 @@ model_things = {
     'train_ratio' : 0.6,
     'val_ratio' : 0.5,
     'random_seed' : 42,
-    'batch_size' : 5,
+    'batch_size' : 50,
     'log_path' : f"{path}{name}.txt",
     'weight_store_path' : f"{path}/WEIGHT/{name}({0}).pt",
     'learning_rate' : 0.01,

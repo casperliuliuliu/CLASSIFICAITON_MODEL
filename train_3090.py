@@ -18,7 +18,9 @@ glomer_tvgh:
 dataset = ["D:\P2023\DATA\glomer_cg(2)", "D:\P2023\DATA\glomer_cg", "D:\P2023\DATA\glomer_2020_2022", "D:\P2023\DATA\glomer_tbgh"]
 
 
-model_list = ['densenet201', 'densenet169', 'densenet161', 'densenet121', 'medvit_large', 'medvit_base', 'medvit_small', ]
+# model_list = ['densenet201', 'densenet169', 'densenet161', 'densenet121', 'medvit_large', 'medvit_base', 'medvit_small', ]
+model_list = ['medvit_base', 'medvit_small', ]
+batch_size = [40, 40]
 for ii in range(len(model_list)):
     mod_running = model_list[ii]
     print(mod_running)
@@ -30,7 +32,7 @@ for ii in range(len(model_list)):
         'train_ratio' : 0.6,
         'val_ratio' : 0.5,
         'random_seed' : 42,
-        'batch_size' : 40,
+        'batch_size' : batch_size[ii],
         'log_path' : f"{path}{name}.txt",
         'weight_store_path' : f"{path}/WEIGHT/{name}({ii}).pt",
         'learning_rate' : 0.01,
